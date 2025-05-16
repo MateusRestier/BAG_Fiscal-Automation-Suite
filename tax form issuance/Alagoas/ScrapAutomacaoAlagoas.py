@@ -117,7 +117,6 @@ def fazer_login(driver, cnpj, loja, login, senha):
 
 def emitir_guias():
     # Lista de lojas com CNPJ, Loja, Login e Senha
-
     lojas = [
         (os.getenv("CNPJLOJA75"), 75, os.getenv("LOGINLOJA75"), os.getenv("SENHALOJA75")),
         (os.getenv("CNPJLOJA76"), 76, os.getenv("LOGINLOJA76"), os.getenv("SENHALOJA76")),
@@ -146,6 +145,20 @@ def emitir_guias():
         botao_minhas_cobrancas.click()
         print("✅ Clique realizado no botão 'Minhas Cobranças'.")
         input("Pressione Enter para continuar...")
+        # Descer a barra de rolagem até 8/10 da página
+        driver.execute_script("window.scrollBy(0, window.innerHeight * 0.8);")
+        print("⬇️ Barra de rolagem descida até 80% da página.")
+        input("Pressione Enter para continuar...")
+        # Aguardar até que o checkbox para selecionar todas as NFs esteja visível e clicável
+        WebDriverWait(driver, 20).until(
+            EC.element_to_be_clickable((By.ID, "checkall"))
+        )
+
+        # Encontrar o quadradinho e clicar para selecionar todas as NFs
+        checkbox = driver.find_element(By.ID, "checkall")
+        checkbox.click()
+        print("✅ Quadradinho para selecionar todas as NFs clicado.")
+        input("Pressione Enter para continuar...")
 
         # Após completar as ações para uma loja, reinicia o navegador para garantir que a sessão seja limpa
         print("🔄 Reiniciando o navegador para garantir que a sessão anterior seja limpa.")
@@ -156,7 +169,6 @@ def emitir_guias():
 
     # Fechar o navegador após a execução de todos os logins
     driver.quit()
-
 
 
 def main():
